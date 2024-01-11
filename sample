@@ -1,41 +1,16 @@
-# Options
-  option {
-    option_name = "EFS_INTEGRATION"
-    option_settings = [
-      {
-        name  = "efs_enabled"
-        value = "true"
-      }
-    ]
-  }
-
-  option {
-    option_name = "S3_INTEGRATION"
-    option_settings = [
-      {
-        name  = "s3_enabled"
-        value = "true"
-      }
-    ]
-  }
-
   option {
     option_name = "TDE"
-    option_settings = [
-      {
-        name  = "tde_enabled"
-        value = "true"
-      }
-    ]
   }
 
   option {
     option_name = "TIMEZONE_FILE_AUTOUPGRADE"
-    option_settings = [
-      {
-        name  = "timezone_file_autoupgrade_enabled"
-        value = "true"
-      }
-    ]
+  }
+
+  option {
+    option_name = "EFS_INTEGRATION"
+  }
+
+  option {
+    option_name = "S3_INTEGRATION"
   }
 }
