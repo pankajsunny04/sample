@@ -1,1 +1,11 @@
-rundll32.exe sysdm.cpl,EditEnvironmentVariables
+  option {
+    option_name = "EFS_INTEGRATION"
+    port        = 1521
+    option_settings = [
+      {
+        name  = "efs_id"
+        value = aws_efs_file_system.example.id
+      },
+      # Additional option settings as needed
+    ]
+  }
