@@ -73,3 +73,23 @@ output "my_bucket_name" {
   description = "The name of the created S3 bucket."
   value       = module.my_s3_bucket.bucket_name
 }
+
+
+
+resource "aws_s3_bucket" "example" {
+  bucket = "my-tf-example-bucket"
+}
+
+resource "aws_s3_bucket_ownership_controls" "example" {
+  bucket = aws_s3_bucket.example.id
+  rule {
+    object_ownership = "BucketOwnerPreferred"
+  }
+}
+
+resource "aws_s3_bucket_acl" "example" {
+  depends_on = [aws_s3_bucket_ownership_controls.example]
+
+  bucket = aws_s3_bucket.example.id
+  acl    = "private"
+}
