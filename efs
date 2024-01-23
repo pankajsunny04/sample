@@ -1,0 +1,66 @@
+variable "vpc_id" {
+  description = "ID of the VPC where the EFS should be created"
+}
+
+variable "subnet_ids" {
+  description = "List of subnet IDs in which EFS will be deployed"
+  type        = list(string)
+}
+
+variable "efs_name" {
+  description = "Name for the EFS file system"
+}
+
+variable "kms_key_id" {
+  description = "ID of the KMS key for EFS encryption"
+}
+
+provider "aws" {
+  region = "your_region"
+  # Add any other provider configurations as needed
+}
+
+resource "aws_efs_file_system" "efs" {
+  name = var.efs_name
+
+  lifecycle {
+    create_before_destroy = true
+  }
+
+  performance_mode = "generalPurpose"
+  throughput_mode  = "bursting"
+
+  encrypted = true
+  kms_key_id = var.kms_key_id
+
+  tags = {
+    Name = var.efs_name
+  }
+}
+
+resource "aws_efs_mount_target" "efs_mount_target" {
+  count          = length(var.subnet_ids)
+  file_system_id = aws_efs_file_system.efs.id
+  subnet_id      = var.subnet_ids[count.index]
+
+  security_groups = ["sg-xxxxxxxxxxxxx"]  # Replace with your security group IDs
+}
+
+output "efs_dns_name" {
+  value = aws_efs_file_system.efs.dns_name
+}
+
+
+
+
+module "efs_module" {
+  source      = "./efs_module"
+  vpc_id      = "vpc-xxxxxxxxxxxxxxxxx"  # Replace with your VPC ID
+  subnet_ids  = ["subnet-xxxxxxxxxxxxxxxxx", "subnet-yyyyyyyyyyyyyyyyy"]  # Replace with your subnet IDs
+  efs_name    = "your-efs-name"
+  kms_key_id  = "your-kms-key-id"  # Replace with your KMS key ID
+}
+
+output "efs_dns_name" {
+  value = module.efs_module.efs_dns_name
+}
